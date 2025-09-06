@@ -59,12 +59,35 @@ def plot_density_estimation_results(
 
 
 def plot_finnish_parties(transformed_data: pd.DataFrame, splot: pyplot.subplot = None):
-    """Write a function to plot the following finnish parties on a 2D scatter plot"""
+    """Write a function to plot the following Finnish parties on a 2D scatter plot"""
     finnish_parties = [
         {"parties": ["SDP", "VAS", "VIHR"], "country": "fin", "color": "r"},
         {"parties": ["KESK", "KD"], "country": "fin", "color": "g"},
         {"parties": ["KOK", "SFP"], "country": "fin", "color": "b"},
         {"parties": ["PS"], "country": "fin", "color": "k"},
     ]
-    ##### YOUR CODE GOES HERE #####
-    pass
+    
+    if splot is None:
+        splot = pyplot.subplot()
+    
+    for group in finnish_parties:
+        parties = group["parties"]
+        country = group["country"]
+        color = group["color"]
+        
+        # Filter by country and party
+        subset = transformed_data[
+            (transformed_data["party"].isin(parties)) &
+            (transformed_data["country"] == country)
+        ]
+        
+        if not subset.empty:
+            scatter_plot(
+                subset.drop(columns=["party", "country"]), 
+                color=color, 
+                splot=splot, 
+                label=", ".join(parties)
+            )
+    
+    splot.set_title("2D Plot of Finnish Political Parties")
+
